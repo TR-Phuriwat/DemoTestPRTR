@@ -30,8 +30,8 @@ namespace DemoTestPRTR.Controllers
             {
                 VariantID = pv.VariantID,
                 ProductID = pv.ProductID,
-                ProductName = pv.Product.Name,
-                Name = pv.Name,
+                ProductName = pv.Product.ProductName,
+				ProductVariantName = pv.ProductVariantName,
                 Image = pv.Image,
                 SalePrice = pv.SalePrice,
                 DiscountPrice = pv.DiscountPrice,
@@ -57,8 +57,8 @@ namespace DemoTestPRTR.Controllers
 			{
 				VariantID = pv.VariantID,
 				ProductID = pv.ProductID,
-				ProductName = pv.Product.Name,
-				Name = pv.Name,
+				ProductName = pv.Product.ProductName,
+				ProductVariantName = pv.ProductVariantName,
 				Image = pv.Image,
 				SalePrice = pv.SalePrice,
 				DiscountPrice = pv.DiscountPrice,

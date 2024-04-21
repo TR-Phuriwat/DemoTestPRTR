@@ -19,7 +19,7 @@
 			<div class="card" data-toggle="modal" data-target="" data-id="@product.VariantID">
 				<img src="@Url.Content(product.Image)" class="card-img-top">
 				<div class="card-body">
-					<h5 class="card-title">@Html.Raw(product.Name)</h5>
+					<h5 class="card-title">@Html.Raw(product.ProductVariantName)</h5>
 					<p class="card-text">@product.ProductName</p>
 					<div class="star-rating">
 						<ul class="list-inline">
@@ -106,7 +106,7 @@
 				dataType: "Json",
 				success: function (response) {
 					$('#img-modal').attr('src', response.Image);
-					$('#product-variant-title').html(response.Name);
+					$('#product-variant-title').html(response.ProductVariantName);
 					$('#product-name').html(response.ProductName);
 					$('#product-avaliable').html(parseInt(response.Stock) >= 0 ? 'In-stock' : 'Out-stock');
 					$('#product-vendor').html(response.Location);

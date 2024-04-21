@@ -9,7 +9,7 @@ namespace DemoTestPRTR.Models
         public int ProductID { get; set; }
         public string? ProductName { get; set; }
         public string? ProductDescription { get; set; }
-        public string? Name { get; set; }
+        public string? ProductVariantName { get; set; }
         public string? Image { get; set; }
         public double SalePrice { get; set; }
         public double DiscountPrice { get; set; }
@@ -24,8 +24,8 @@ namespace DemoTestPRTR.Models
     {
         [Key]
         public int ProductID { get; set; }
-        public string? Name { get; set; }
-        public string? Description { get; set; }
+        public string? ProductName { get; set; }
+        public string? ProductDescription { get; set; }
         public ICollection<ProductVariantModel> ProductVariantModel { get; set; }
     }
 
@@ -34,7 +34,7 @@ namespace DemoTestPRTR.Models
         [Key]
         public int VariantID { get; set; }
         public int ProductID { get; set; }
-        public string? Name { get; set; }
+        public string? ProductVariantName { get; set; }
         public string? Image { get; set; }
         public double SalePrice { get; set; }
         public double DiscountPrice { get; set; }
