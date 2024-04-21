@@ -52,7 +52,7 @@ namespace DemoTestPRTR.Controllers
         public string GetProductById(int variantId) {
 
 			var productVariantsWithProductName = _dbcontext.ProductVariant
-			.Include(pv => pv.Product).Where(pv => pv.VariantID == variantId)
+			.Include(pv => pv.Product).Where(pv => pv.VariantID.Equals(variantId))
 			.Select(pv => new ProductVariantViewModel
 			{
 				VariantID = pv.VariantID,
