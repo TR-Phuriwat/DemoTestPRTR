@@ -1,0 +1,27 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+.star-rating i {
+    color: #ffc000;
+}
+.card-text.text-oriprice {
+    color: #222222;
+}
+.card-text.text-saleprice {
+    color: #CC0000;
+}

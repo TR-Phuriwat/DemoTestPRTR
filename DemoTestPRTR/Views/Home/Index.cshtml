@@ -1,0 +1,161 @@
+﻿@{
+	ViewData["Title"] = "Home Page";
+}
+@model IEnumerable<ProductVariantViewModel>;
+
+<!-- Header -->
+<div class="row mb-4">
+	<div class="col-md-12">
+		<h3 class="text-center">Explore Best Selling</h3>
+		<h5 class="text-center">offer up to 50% off</h5>
+	</div>
+</div>
+
+<!-- Card Items -->
+<div class="row">
+	@foreach (var product in Model)
+	{
+		<div class="col-md-3 mb-4">
+			<div class="card" data-toggle="modal" data-target="" data-id="@product.VariantID">
+				<img src="@Url.Content(product.Image)" class="card-img-top">
+				<div class="card-body">
+					<h5 class="card-title">@Html.Raw(product.Name)</h5>
+					<p class="card-text">@product.ProductName</p>
+					<div class="star-rating">
+						<ul class="list-inline">
+							@for (int i = 1; i <= 5; i++)
+							{
+								<li class="list-inline-item">
+									<i class="fa @(product.Rating >= i ? "fa-star" : "fa-star-o")"></i>
+								</li>
+							}
+						</ul>
+					</div>
+					@if (product.DiscountPrice == 0)
+					{
+						<p class="card-text text-saleprice">$@product.SalePrice</p>
+					}
+					else
+					{
+						<strike class="card-text text-oriprice">$@product.SalePrice</strike>
+						<span class="card-text text-saleprice">$@product.DiscountPrice</span>
+					}
+				</div>
+			</div>
+		</div>
+	}
+</div>
+
+<!-- Product Details Modal -->
+<div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document" style="max-width:800px">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="productModalLabel">Product Details</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<!-- Product details content goes here -->
+				<div class="d-flex justify-content-center">
+					<div style="width:350px">
+						<img class="card-img-top" id="img-modal">
+					</div>
+					<div class="p-4" style="width:350px">
+						<h5><span id="product-variant-title"></span></h5>
+						<p><span id="product-name"></span></p>
+						<p><strong>Avaliability</strong> <span id="product-avaliable"></span></p>
+						<p><strong>Vendor</strong> <span id="product-vendor"></span></p>
+						<p><strong>SKU</strong> <span id="product-sku"></span></p>
+						<p id="product-price"></p>
+						<div class="input-group" style="max-width:120px;">
+							<span class="input-group-btn">
+								<button type="button" class="btn btn-secondary btn-number" disabled="disabled" data-type="minus" data-field="quant[1]">
+									<span class="fa fa-minus"></span>
+								</button>
+							</span>
+							<input type="text" name="quant[1]" class="form-control input-number text-center" value="1" min="1" max="10">
+							<span class="input-group-btn">
+								<button type="button" class="btn btn-secondary btn-number" data-type="plus" data-field="quant[1]">
+									<span class="fa fa-plus"></span>
+								</button>
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-dark">Add to Cart</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+
+		//แสดงข้อมูล Product บน modal 
+		$('.card').click(function () {
+			var variantId = $(this).data('id');
+			$.ajax({
+				url: '/Home/GetProductById',
+				type: 'GET',
+				data: { variantId: variantId },
+				dataType: "Json",
+				success: function (response) {
+					$('#img-modal').attr('src', response.Image);
+					$('#product-variant-title').html(response.Name);
+					$('#product-name').html(response.ProductName);
+					$('#product-avaliable').html(parseInt(response.Stock) >= 0 ? 'In-stock' : 'Out-stock');
+					$('#product-vendor').html(response.Location);
+					$('#product-sku').html(response.SKU);
+
+					if (response.DiscountPrice == 0) {
+						$('#product-price').html('$' + response.SalePrice);
+					} else {
+						$('#product-price').html('<strike>$' + response.SalePrice + '</strike> <span>$' + response.DiscountPrice + '</span>');
+					}
+					$('#productModal').modal('show');
+				},
+				error: function (xhr) {
+					console.log(xhr.responseText);
+				}
+			});
+		});
+
+		// เพิ่มจำนวน
+		$('.btn-number[data-type="plus"]').click(function (e) {
+			e.preventDefault();
+			var fieldName = $(this).data('field');
+			var currentVal = parseInt($('input[name="' + fieldName + '"]').val());
+			if (!isNaN(currentVal)) {
+				$('input[name="' + fieldName + '"]').val(currentVal + 1);
+				// ยกเลิกการ disable ปุ่ม decrease ถ้าค่ามากกว่า 0
+				if (currentVal >= 0) {
+					$('.btn-number[data-type="minus"]').removeAttr('disabled');
+				}
+			} else {
+				$('input[name="' + fieldName + '"]').val(1);
+			}
+		});
+
+		// ลดจำนวน
+		$('.btn-number[data-type="minus"]').click(function (e) {
+			e.preventDefault();
+			var fieldName = $(this).data('field');
+			var currentVal = parseInt($('input[name="' + fieldName + '"]').val());
+			if (!isNaN(currentVal) && currentVal > 1) {
+				$('input[name="' + fieldName + '"]').val(currentVal - 1);
+			} else {
+				$('input[name="' + fieldName + '"]').val(1);
+				// ถ้าค่าเท่ากับ 1 ให้ disable ปุ่ม decrease
+				$(this).attr('disabled', 'disabled');
+			}
+		});
+
+
+	});
+
+</script>
